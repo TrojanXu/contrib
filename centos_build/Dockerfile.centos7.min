@@ -32,7 +32,7 @@ ENV NV_CUDNN_VERSION=8.3.2.44-1
 ENV NV_CUDNN_PACKAGE libcudnn8-devel-${NV_CUDNN_VERSION}.cuda11.5
 RUN yum install -y ${NV_CUDNN_PACKAGE}
 
-RUN yum install -y openssl-devel which wget numactl-devel bzip2 gettext patch unzip expat-devel     https://download-ib01.fedoraproject.org/pub/epel/7/x86_64/Packages/r/re2-20160401-2.el7.x86_64.rpm     https://download-ib01.fedoraproject.org/pub/epel/7/x86_64/Packages/r/re2-devel-20160401-2.el7.x86_64.rpm     https://download-ib01.fedoraproject.org/pub/epel/7/x86_64/Packages/r/rapidjson-devel-1.1.0-2.el7.noarch.rpm     http://www.nosuchhost.net/~cheese/fedora/packages/epel-7/x86_64/libb64-1.2.1-1.el7.x86_64.rpm     http://www.nosuchhost.net/~cheese/fedora/packages/epel-7/x86_64/libb64-devel-1.2.1-1.el7.x86_64.rpm
+RUN yum install -y openssl-devel which wget numactl-devel bzip2 gettext patch unzip expat-devel     https://download-ib01.fedoraproject.org/pub/epel/7/x86_64/Packages/r/rapidjson-devel-1.1.0-2.el7.noarch.rpm     http://www.nosuchhost.net/~cheese/fedora/packages/epel-7/x86_64/libb64-1.2.1-1.el7.x86_64.rpm     http://www.nosuchhost.net/~cheese/fedora/packages/epel-7/x86_64/libb64-devel-1.2.1-1.el7.x86_64.rpm
 
 # for python build
 RUN yum install -y libffi-devel
@@ -54,6 +54,9 @@ RUN wget http://mirror.linux-ia64.org/gnu/gcc/releases/gcc-7.4.0/gcc-7.4.0.tar.x
 RUN echo $(gcc --version)
 
 RUN wget https://github.com/Kitware/CMake/releases/download/v3.21.4/cmake-3.21.4.tar.gz     && tar -xvf cmake-3.21.4.tar.gz     && cd cmake-3.21.4     && ./bootstrap     && make -j8     && make install     && cd ..     && rm -rf cmake-3.21.4 cmake-3.21.4.tar.gz
+
+# re2 20160401 package for centos7 will trigger segfault, using 20200101 from source instead
+RUN wget https://github.com/google/re2/archive/refs/tags/2020-01-01.tar.gz && tar -xvf 2020-01-01.tar.gz && cd re2-2020-01-01 && make -j && make install && cd .. && rm -rf re2-2020-01-01 2020-01-01.tar.gz
 
 RUN wget https://github.com/curl/curl/releases/download/curl-7_80_0/curl-7.80.0.tar.bz2     && tar -xvf curl-7.80.0.tar.bz2     && mkdir -p curl-7.80.0/build     && cd curl-7.80.0/build     && cmake .. -DCMAKE_INSTALL_PREFIX=/usr    && make -j8     && make install     && cd ../..     && rm -rf curl-7.80.0.tar.bz2 curl-7.80.0
 
